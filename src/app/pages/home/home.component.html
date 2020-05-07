@@ -1,0 +1,39 @@
+<p>list of users</p>
+<ul>
+  <li *ngFor="let u of users">{{u.name}} <button *ngIf="!isFriend(u.userId)" (click)="friendRequest(u.userId,1)">Send Friend Request</button></li>
+</ul>
+<div *ngIf="user != null">
+  <p>list of requests</p>
+  <ul>
+    <li *ngFor="let friend of user.friends | friendList:3">{{friend.name}}
+      <button (click)="friendRequest(friend.userId,2)">Accept</button>
+      <button (click)="friendRequest(friend.userId,3)">Decline</button>
+    </li>
+  </ul>
+  <p>list of msgs</p>
+  <ul>
+    <li *ngFor="let msg of msgs"><p *ngIf="msg.user.userId == user.userId;else otherUser">You said : {{msg.content}}</p>
+    <ng-template #otherUser>{{msg.user.name}} : {{msg.content}}</ng-template></li>
+  </ul>
+  <textarea #msgToSend  cols="30" rows="10"></textarea>
+  <button (click)="sendMessage(msgToSend.value)">SendMessage</button>
+</div>
+<div *ngIf="rooms != null">
+  <p>list of rooms</p>
+  <ul>
+    <li *ngFor="let room of rooms"> {{room.name}} : ({{(room.usersJoining == null) ? 0 : room.usersJoining .length}}/ {{room.numberOfPlayer}})
+      <button [disabled]="inRoom(room)" (click)="joinRoom(room)">Join</button>
+      <button [disabled]="!inRoom(room)" (click)="leaveRoom()">Leave</button>
+      <button [disabled]="!isMyRoom(room.adminId)" (click)="removeRoom(room.adminId)">Remove</button>
+      <button *ngIf="isMyRoom(room.adminId)" [disabled]="room.usersJoining.length < room.numberOfPlayer" (click)="play(room)">Play</button>
+    </li>
+  </ul>
+</div>
+
+<form *ngIf="(user != null)" (ngSubmit)="createRoom()" #roomForm="ngForm">
+<div class="form-group">
+  <label for="room_name">Room Name:</label>
+  <input type="text" class="form-control" name="room-name" [(ngModel)]="newRoom.name">
+</div>
+<button type="submit">Create</button>
+</form>

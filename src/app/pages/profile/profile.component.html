@@ -1,0 +1,23 @@
+<p>profile</p>
+<ul *ngIf="user != null">
+  <li>name : {{user.name}}</li>
+  <li>email : {{user.email}}</li>
+  <li>status : {{user.status}}</li>
+  <li>gender : {{user.gender}}</li>
+  <li *ngIf="user.friends != null">friends ({{user.friends.length}})
+    <ul>
+      <li *ngFor="let f of user.friends |friendList:1">name : {{f.name}}</li>
+    </ul>
+  </li>
+  <li *ngIf="user.friends != null">sending
+    <ul>
+      <li *ngFor="let f of user.friends |friendList:2">name : {{f.name}}</li>
+    </ul>
+  </li>
+  <li *ngIf="user.friends != null">pending
+    <ul>
+      <li *ngFor="let f of user.friends |friendList:3">name : {{f.name}}</li>
+    </ul>
+  </li>
+
+</ul>

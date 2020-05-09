@@ -1,1 +1,38 @@
 <p>room works!</p>
+<button *ngIf="room.adminId == currentPlayer.userId" [disabled]="game.status == 0" (click)="start()">Start</button>
+
+
+<div *ngIf="isMyTurn()">
+  <p>turn: {{game.players[game.numberOfRounds % room.numberOfPlayer].name}}</p>
+  <form>
+    <div class="form-group">
+      <label for="receiver">Receiver</label>
+      <select class="form-control" [(ngModel)]="chosenPlayer" name="receiver">
+        <option *ngFor="let opt of game.players" [value]="opt.connectionId">{{opt.name}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="discard1">Discard a Card</label>
+      <select class="form-control" [(ngModel)]="discardIndex" name="discard1">
+        <option *ngFor="let opt of game.inHandCards; let i = index" [value]="i">{{opt.cardType}}</option>
+      </select>
+    </div>
+    <button type="button" (click)="playTurn()">Play</button>
+  </form>
+</div>
+<div *ngIf="cards != null">
+<p>pick a card</p>
+<form action="">
+  <div class="form-group">
+    <label for="discard2">Discard a Card</label>
+    <select class="form-control" [(ngModel)]="discardIndex" name="discard2">
+      <option *ngFor="let opt of cards; let i = index" [value]="i">{{opt.cardType}}</option>
+    </select>
+  </div>
+  <button type="button" (click)="chooseCard()">Submit</button>
+</form>
+</div>
+<div class="col">
+  <video #videoPlayer width="320" height="240" controls></video>
+</div>
+<button (click)="c()">c</button>

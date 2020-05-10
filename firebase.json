@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/SecretHitlerFrontEnd",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

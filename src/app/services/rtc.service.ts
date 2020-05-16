@@ -23,7 +23,6 @@ export class RtcService {
 
   public currentPeer: Instance;
   constructor() {
-    console.log('rtc');
     this.users = new BehaviorSubject([]);
     this.users$ = this.users.asObservable();
   }
@@ -31,19 +30,22 @@ export class RtcService {
     const peer = new SimplePeer({ stream,initiator,trickle:false  });
 
     //this.onStream.next({ id: userId, data:stream });
+
     peer.on('signal',data => {
+      console.log('signal');
+      console.log(data);
       const stringData = JSON.stringify(data);
       this.onSignalToSend.next({ userId: userId, data: stringData });
     });
     peer.on('stream', data => {
-
+      console.log('stream');
       this.onStream.next({ userId: userId, data });
     });
 
     peer.on('connect', () => {
+      console.log('connect');
       this.onConnect.next({ userId: userId, data: null });
     });
-    this.currentPeer = peer;
     return peer;
   }
 

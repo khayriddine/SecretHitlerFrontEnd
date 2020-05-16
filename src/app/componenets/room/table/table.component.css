@@ -1,0 +1,34 @@
+.fascist-board{
+   background-image: url('/assets/images/fascist_board.png');
+  background-size: 100% 100%;
+  background-repeat:no-repeat;
+  height: 100%;
+}
+.liberal-board{
+  background-image: url('/assets/images/liberal_board.png');
+  background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.fail-round{
+  background-image: url('/assets/images/next_round.png');
+  background-size: contain;
+ background-repeat:no-repeat;
+ background-position: center;
+}
+.discard-pile{
+  background-image: url('/assets/images/discard_pile.png');
+  background-size: contain;
+ background-repeat:no-repeat;
+ background-position: center;
+}
+.draw-pile{
+  background-image: url('/assets/images/draw_pile.png');
+  background-size: contain;
+ background-repeat:no-repeat;
+ background-position: center;
+}
+.container{
+  height: 100%;
+  display: block;
+}

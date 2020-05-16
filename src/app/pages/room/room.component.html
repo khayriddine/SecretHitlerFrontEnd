@@ -1,4 +1,5 @@
-<p>room works!</p>
+<!--
+  <p>room works!</p>
 <button *ngIf="room.adminId == currentPlayer.userId" [disabled]="game.status == 0" (click)="start()">Start</button>
 
 
@@ -33,6 +34,72 @@
 </form>
 </div>
 <div class="col">
-  <video #videoPlayer width="320" height="240" controls></video>
+  <video #videoPlayer width="320" height="240" controls="false"></video>
 </div>
 <button (click)="c()">c</button>
+<div class="chancelor-box" [cdkDragFreeDragPosition]="chancelorPos" cdkDrag>
+</div>
+-->
+
+<!-- Room Layout -->
+
+
+<div class="container" fxLayout="column" fxLayoutAlign="center">
+
+  <div fxFlex="15%" class="emptyBox">
+    <div class="container" fxLayout="row" fxLayoutAlign="center">
+      <div *ngFor="let item of top_table" [fxFlex]="item.rowsRatio">
+        <div *ngIf="item.player!= null" class="container" fxLayout="row" fxLayoutAlign="center">
+          <div fxFlex="50%">
+            <button [disabled]="!isMyTurn() || (isMyTurn() && game.inHandCards.length == 2)"
+             (click)="onChancelorChosen(item.player)">
+             <img *ngIf="item.player.profilePicture!=null" [src]="item.player.profilePicture" [title]="item.player.name">
+            </button>
+          </div>
+          <div fxFlex="50%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="70%" class="mid-table">
+    <div class="container" fxLayout="row" fxLayoutAlign="center">
+      <div fxFlex="10%" class="emptyBox">
+        <div class="container" fxLayout="column" fxLayoutAlign="center">
+          <div *ngFor="let item of left_table" [fxFlex]="item.rowsRatio" [ngClass]="'item.class'">
+            <div *ngIf="item.player!= null" class="container" fxLayout="column" fxLayoutAlign="center">
+              <div fxFlex="50%">
+                <button [disabled]="!isMyTurn()|| (isMyTurn() && game.inHandCards.length == 2)"
+                (click)="onChancelorChosen(item.player)">
+                <img *ngIf="item.player.profilePicture!=null" [src]="item.player.profilePicture" [title]="item.player.name">
+              </button>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div fxFlex="80%" class="table">
+        <app-table></app-table>
+      </div>
+      <div fxFlex="10%" class="emptyBox">
+        <div class="container" fxLayout="column" fxLayoutAlign="center">
+          <div *ngFor="let item of right_table" [fxFlex]="item.rowsRatio" [ngClass]="item.class">
+            <div *ngIf="item.player!= null" class="container" fxLayout="column" fxLayoutAlign="center">
+              <div fxFlex="50%"><button [disabled]="!isMyTurn() || (isMyTurn() && game.inHandCards.length == 2)" (click)="onChancelorChosen(item.player)"><img *ngIf="item.player.profilePicture!=null" [src]="item.player.profilePicture" [title]="item.player.name"></button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="15%" class="emptyBox">
+    <div class="container" fxLayout="row" fxLayoutAlign="center">
+      <div *ngFor="let item of bot_table" [fxFlex]="item.rowsRatio" [class.class-name]="item.class">
+        <div *ngIf="item.player!= null && item.player.userId == currentPlayer.userId" class="container" fxLayout="row" fxLayoutAlign="center">
+          <div fxFlex="50%"><img [src]="secretRoleImg(item.player.secretRole)" [alt]="item.player.name"></div>
+          <div fxFlex="50%"><img *ngIf="item.player.profilePicture!=null" [src]="item.player.profilePicture" [title]="item.player.name"></div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -13,6 +13,8 @@ import { Room } from '../models/Room';
   providedIn: 'root'
 })
 export class UserService {
+  private user : Subject<User> = new Subject<User>();
+  public user$ = this.user.asObservable();
   roomNavigation : EventEmitter<Room>;
   private hubConnection : HubConnection;
   constructor(private http: HttpClient) {

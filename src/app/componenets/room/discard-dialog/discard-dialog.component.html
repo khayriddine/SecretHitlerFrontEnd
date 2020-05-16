@@ -1,0 +1,10 @@
+
+<h3>Discard a Card</h3>
+<ul>
+  <li *ngFor="let card of cards; let i = index"><input type="radio" name="discarded" [(ngModel)]="data.discarded" [id]="'cb'+i" [value]="i"/>
+    <label [for]="'cb'+i"><img [src]="cardPicture(card.cardType)" /></label>
+  </li>
+</ul>
+<button mat-button [mat-dialog-close]="data.discarded" cdkFocusInitial>Confirm</button>
+<button mat-button (click)="onNoClick()">Cancel</button>
+{{chosenCard}}

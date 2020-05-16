@@ -1,4 +1,4 @@
-<nav>
+<!--<nav>
   <ul>
     <li><a routerLink=''>Home</a></li>
     <li><a routerLink='auth'>Authentification</a></li>
@@ -7,4 +7,44 @@
     <li><a routerLink='help'>Help</a></li>
     <li><a routerLink='profile'>Profile</a></li>
   </ul>
-</nav>
+
+</nav>-->
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="toggleSideBar()" *ngIf="user != null">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <button mat-button (click)="goTo('home')">
+    Secret Hitler
+  </button>
+  <div fxFlex fxLayout="row"  fxLayoutAlign="flex-end">
+    <ul fxLayout="row" fxLayoutGap="10px">
+      <li *ngIf="user != null">
+        <button mat-icon-button>
+          <mat-icon>notifications</mat-icon>
+        </button>
+    </li>
+      <li *ngIf="user != null;else noUser">
+        <button mat-button [matMenuTriggerFor]="menu">
+          {{user.name}}
+      </button>
+      <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="goTo('profile')">
+              <mat-icon>person_outline</mat-icon>
+              Profile
+          </button>
+          <button mat-menu-item (click)="logOut()">
+            <mat-icon>exit_to_app</mat-icon>
+            Sign out
+        </button>
+      </mat-menu>
+      </li>
+      <ng-template #noUser>
+        <li>
+          <button mat-button (click)="goTo('auth')">
+            Log In
+        </button>
+        </li>
+      </ng-template>
+    </ul>
+  </div>
+</mat-toolbar>

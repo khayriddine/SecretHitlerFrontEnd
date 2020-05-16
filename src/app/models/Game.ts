@@ -1,10 +1,11 @@
 import { Card } from './Card';
 import { Player } from './Player';
-import { GameStatus, CardType } from './Enumerations';
+import { GameStatus, CardType, SecretRole } from './Enumerations';
 
 export class Game{
   gameId? :number;
   status: GameStatus;
+  electionFailTracker?:number;
   numberOfRounds: number;
   players: Player[];
   remainingCards: Card[];
@@ -22,7 +23,57 @@ export class Game{
 
     this.newGameCards();
   }
+  startGame(){
 
+    this.assignPlayers();
+  }
+  forcedCardOnTable(){
+    if(this.remainingCards == null || this.remainingCards.length==0){
+      this.resetCards();
+
+    }
+    this.onTableCards.push(this.remainingCards.pop());
+  }
+  assignPlayers(){
+    let roles: SecretRole[];
+   switch(this.players.length){
+     case 4: {
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal];
+      break;
+     }
+     case 5: {
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      break;
+     }
+     case 6: {
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      break;
+     }
+     case 7: {
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      break;
+     }
+     case 8: {
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      break;
+     }
+     case 9: {
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      break;
+     }
+     case 10: {
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      break;
+     }
+   }
+   this.shuffleRoles(roles);
+  this.players.forEach((p:Player,index:number) => {
+    p.secretRole = roles[index];
+  });
+  }
+  shuffleRoles(roles : SecretRole[]){
+
+  }
   newGameCards(){
     this.remainingCards = [
       {cardType: CardType.Fascist, imagePath:''},

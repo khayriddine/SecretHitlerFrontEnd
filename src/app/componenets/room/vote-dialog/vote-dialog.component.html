@@ -1,0 +1,10 @@
+
+<h3>The President {{presidentName}} propose {{chancellorCandidate}} to be the Chancellor </h3>
+<ul>
+  <li *ngFor="let vote of possibleVotes;"><input type="radio" name="discarded" [(ngModel)]="myVote.value" [id]="'cb'+vote.value" [value]="vote"/>
+    <label [for]="'cb'+vote.value"><img [src]="votePicture(vote)" /></label>
+  </li>
+</ul>
+<button mat-button [mat-dialog-close]="myVote.value" cdkFocusInitial>Vote</button>
+<button mat-button (click)="onNoClick()">Cancel</button>
+

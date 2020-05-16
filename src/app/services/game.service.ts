@@ -7,6 +7,7 @@ import { Card } from '../models/Card';
 import { Game } from '../models/Game';
 import { SignalInfo } from '../models/SignalInfo';
 import { sign } from 'crypto';
+import { Vote } from '../models/Vote';
 
 
 @Injectable({
@@ -26,15 +27,22 @@ export class GameService {
   public gameUpdate$ = this.gameUpdate.asObservable();
   private signal = new Subject<SignalInfo>();
   public signal$ = this.signal.asObservable();
+  private voteRequest = new Subject<any>();
+  public voteRequest$ = this.voteRequest.asObservable();
+  private vote = new Subject<any>();
+  public vote$ = this.vote.asObservable();
 
 
-  constructor() { }
+  constructor() {
+
+   }
   public async startConnection(currentPlayer: Player): Promise<void> {
 
     this.hubConnection = new HubConnectionBuilder().withUrl(env.hubUrl+'hubGames')
     .build();
     await this.hubConnection.start();
     console.log('Connection started');
+    console.log(currentPlayer);
 
     this.hubConnection.on('NewPlayerArrived', (p : Player) => {
       this.player.next(p);
@@ -58,9 +66,23 @@ export class GameService {
       this.gameUpdate.next(game);
     });
     this.hubConnection.on('ReceiveSignal',(signal : SignalInfo) => {
+      console.log('receive signal');
+      console.log(signal);
       this.signal.next(signal);
+    });
+    this.hubConnection.on('ReceiveSignal_test',() => {
+      console.log('test signal');
+    });
+    this.hubConnection.on('GameStatusUpdated',(game : Game) => {
+      this.gameUpdate.next(game);
+    });
+    this.hubConnection.on('ReceiveVoteRequest',(player:Player,sender:string) =>{
+      this.voteRequest.next({player,sender});
+    });
+    this.hubConnection.on('ReceiveVote',(vote:Vote)=>{
+      this.vote.next(vote);
     })
-
+    //BroadcastGameStatus
     this.hubConnection.invoke('NewPlayer', currentPlayer);
   }
   public sendPlayerInfos(player: Player, connectionId:string){
@@ -75,12 +97,21 @@ export class GameService {
   public nextTurn(game : Game,receiver:string){
     this.hubConnection.invoke('GoNextTurn',game,receiver);
   }
+  public updateOtherplayers(game : Game){
+    this.hubConnection.invoke('BroadcastGameStatus',game);
+  }
   public sendSignal(signal: string, userId: number){
     let s: SignalInfo = {
       userId : userId,
       signal : signal
     };
+    console.log(s);
     this.hubConnection.invoke('SendSignal',s);
   }
-
+  public requestVote(player: Player){
+    this.hubConnection.invoke('SendVoteRequest',player);
+  }
+  public voteReply(vote:Vote,receiver:string){
+    this.hubConnection.invoke('ReplyVoteRequest',vote,receiver);
+  }
 }

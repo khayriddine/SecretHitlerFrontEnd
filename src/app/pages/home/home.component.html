@@ -1,4 +1,5 @@
-<p>list of users</p>
+<!--
+  <p>list of users</p>
 <ul>
   <li *ngFor="let u of users">{{u.name}} <button *ngIf="!isFriend(u.userId)" (click)="friendRequest(u.userId,1)">Send Friend Request</button></li>
 </ul>
@@ -37,3 +38,134 @@
 </div>
 <button type="submit">Create</button>
 </form>
+-->
+
+
+  <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap="32px" fxLayoutAlign="center">
+    <div fxFlex.gt-sm="40%" fxFlex="100%">
+      <h4>Rooms</h4>
+      <table mat-table [dataSource]="roomsDataSource">
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let room"> {{room.name}}</td>
+        </ng-container>
+
+        <!-- Gender Column -->
+        <ng-container matColumnDef="admin">
+          <th mat-header-cell *matHeaderCellDef> Admin </th>
+          <td mat-cell *matCellDef="let room"> {{whosAdmin(room.adminId)}}
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="size">
+          <th mat-header-cell *matHeaderCellDef> Size </th>
+          <td mat-cell *matCellDef="let room"> {{room.numberOfPlayer}} </td>
+        </ng-container>
+
+        <!-- Players Column-->
+        <ng-container matColumnDef="players" >
+          <th mat-header-cell *matHeaderCellDef>Players</th>
+          <td mat-cell *matCellDef="let room; let i = index;">
+            <button *ngIf="user != null" #btnAction  mat-button >
+              Show ({{room.usersJoining.length}})
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <td mat-cell *matCellDef="let room">
+          <mat-select *ngIf="user != null" (selectionChange)="actRoom($event.value,room)">
+            <mat-option *ngFor="let item of whatRoomAction(room)" [value]="item">{{item}}</mat-option>
+          </mat-select>
+        </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedRoomsColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedRoomsColumns;"></tr>
+
+
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <h4>Create a Room</h4>
+      <div *ngIf="(user != null)" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap="32px" fxLayoutAlign="center" >
+
+        <mat-form-field fxFlex.gt-sm="30%" fxFlex="100%">
+          <mat-label>Room name</mat-label>
+          <input matInput [(ngModel)]="newRoom.name">
+        </mat-form-field>
+        <mat-form-field fxFlex.gt-sm="30%" fxFlex="100%" >
+          <mat-label>Select Board size</mat-label>
+          <mat-select [(ngModel)]="newRoom.numberOfPlayer">
+            <mat-option value="2">2</mat-option>
+            <mat-option value="3">3</mat-option>
+            <mat-option value="4">4</mat-option>
+            <mat-option value="5">5</mat-option>
+            <mat-option value="6">6</mat-option>
+            <mat-option value="7">7</mat-option>
+            <mat-option value="8">8</mat-option>
+            <mat-option value="9">9</mat-option>
+            <mat-option value="10">10</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div fxLayout fxFlexAlign="center">
+          <button  mat-button color="primary" (click)="createRoom()">Submit</button>
+        </div>
+
+    </div>
+    </div>
+    <div fxFlex.gt-sm="60%" fxFlex="100%">
+      <h4>Users</h4>
+      <table mat-table [dataSource]="usersDataSource">
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}}</td>
+        </ng-container>
+
+        <!-- Gender Column -->
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell *matHeaderCellDef> Gender </th>
+          <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action" >
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let element; let i = index;">
+            <button *ngIf="user != null" #btnAction  mat-button (click)="act(element)">
+              {{whatAction(element)}}
+            </button>
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedUsersColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedUsersColumns;"></tr>
+
+
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+
+
+
+
+

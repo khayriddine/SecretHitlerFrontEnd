@@ -10,14 +10,33 @@ import { RoomComponent } from './pages/room/room.component';
 import { HelpComponent } from './pages/help/help.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { AuthComponent } from './pages/auth/auth.component';
-import { HeaderComponent } from './componenets/layouts/header/header.component';
-import { FooterComponent } from './componenets/layouts/footer/footer.component';
-
+import { TableComponent } from './componenets/room/table/table.component';
+import { TopTableComponent } from './componenets/room/top-table/top-table.component';
+import { BotTableComponent } from './componenets/room/bot-table/bot-table.component';
+import { RightTableComponent } from './componenets/room/right-table/right-table.component';
+import { LeftTableComponent } from './componenets/room/left-table/left-table.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { FriendListPipe } from './pipes/friend-list.pipe';
-
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { LayoutsModule } from './componenets/layouts/layouts.module';
+import {MatTableModule} from '@angular/material/table';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatDialogModule} from '@angular/material/dialog';
+import { DiscardDialogComponent } from './componenets/room/discard-dialog/discard-dialog.component';
+import {MatRadioModule} from '@angular/material/radio';
+import { VoteDialogComponent } from './componenets/room/vote-dialog/vote-dialog.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,18 +46,43 @@ import { FriendListPipe } from './pipes/friend-list.pipe';
     HelpComponent,
     SettingsComponent,
     AuthComponent,
-    HeaderComponent,
-    FooterComponent,
-    FriendListPipe
+    FriendListPipe,
+    TableComponent,
+    TopTableComponent,
+    BotTableComponent,
+    RightTableComponent,
+    LeftTableComponent,
+    DiscardDialogComponent,
+    VoteDialogComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatSidenavModule,
+    LayoutsModule,
+    MatTableModule,
+    FlexLayoutModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatBadgeModule,
+    MatIconModule,
+    MatDialogModule,
+
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatGridListModule,
+    DragDropModule,
+    MatRadioModule,
+    MatSnackBarModule
+
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DiscardDialogComponent,VoteDialogComponent]
 })
 export class AppModule { }

@@ -7,3 +7,6 @@ export enum GameStatus {
 export enum CardType {
   Liberal =0, Fascist = 1
 }
+export enum SecretRole {
+  Liberal = 0, Fascist = 1, Hitler=2
+}

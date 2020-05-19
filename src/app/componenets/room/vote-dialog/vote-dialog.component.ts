@@ -14,9 +14,11 @@ export class VoteDialogComponent {
   possibleVotes: Vote[] = [
     {
       value:0,
+      name:'unknown'
     },
     {
       value:1,
+      name:'unknown'
     }
   ];
   myVote:Vote;
@@ -26,7 +28,8 @@ export class VoteDialogComponent {
       this.chancellorCandidate = data.player;
       this.presidentName = data.president;
       this.myVote = {
-        value: 1
+        value: 1,
+        name:'unknown'
       };
     }
     onNoClick(): void {

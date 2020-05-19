@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { User, Friend } from 'src/app/models/User';
 import { UserService } from 'src/app/services/user.service';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { Message } from 'src/app/models/Message';
 import { Runner } from 'protractor';
 import { Room } from 'src/app/models/Room';
@@ -17,6 +17,7 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  buttonNameToDisable:string = '';
   user : User;
   users: User[];
   msgs: Message[];
@@ -25,11 +26,14 @@ export class HomeComponent implements OnInit {
   msgStream : Subject<Message>;
   userSubject: Subject<User>;
   notifEvent: EventEmitter<any>;
+  subscription = new Subscription();
   displayedUsersColumns: string[] = ['name', 'gender', 'status','action'];
   displayedRoomsColumns: string[] = ['name', 'admin', 'size','players','action'];
   usersDataSource = new MatTableDataSource<User>();
   roomsDataSource = new MatTableDataSource<Room>();
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
+  @ViewChild('usersTablePaginator', {static: true}) usersPaginator: MatPaginator;
+  @ViewChild('roomsTablePaginator', {static: true}) roomsPaginator: MatPaginator;
   constructor(private userServices: UserService,
     private roomServices: RoomService,
     private _router: Router) {
@@ -66,7 +70,20 @@ export class HomeComponent implements OnInit {
     this.userServices.onReceiveNotification(this.notifEvent);
     this.userServices.roomNavigation.subscribe(room => {
       this.goToRoom(room);
-    })
+    });
+
+    this.subscription.add(this.userServices.notif$.subscribe((t:string) => {
+      switch(t){
+        case 'users': {
+          this.usersUpToDate();
+          break;
+        }
+        case 'rooms':{
+          this.roomsUpToDate();
+          break;
+        }
+      }
+    }))
   }
   usersUpToDate(){
     this.user = JSON.parse(sessionStorage.getItem('currentUser'));
@@ -80,19 +97,18 @@ export class HomeComponent implements OnInit {
     this.userServices.getAllUsers().subscribe(res => {
       this.users = res;
       this.usersDataSource.data = this.users;
-      this.usersDataSource.paginator = this.paginator;
+      this.usersDataSource.paginator = this.usersPaginator;
     });
 
   }
   test(event){
-    console.log(event);
   }
 
   roomsUpToDate(){
      this.roomServices.getAllRooms().subscribe(res => {
       this.rooms = res;
       this.roomsDataSource.data = this.rooms;
-      this.roomsDataSource.paginator = this.paginator;
+      this.roomsDataSource.paginator = this.roomsPaginator;
     })
   }
 
@@ -107,7 +123,7 @@ export class HomeComponent implements OnInit {
   friendRequest(friendId,action){
     this.userServices.requestFriendAction(this.user.userId,friendId,action).subscribe(res => {
       this.userSubject.next(res);
-      this.userServices.sendNotification();
+      this.userServices.sendNotification('users');
     });
   }
   isFriend(friendId:number){
@@ -141,20 +157,20 @@ export class HomeComponent implements OnInit {
     return false;
   }
   createRoom(){
+    this.buttonNameToDisable = 'createRoom';
     if(this.user != null)
     this.newRoom.adminId = this.user.userId;
     this.roomServices.createRoom(this.newRoom).subscribe(res => {
       res.usersJoining.push(this.user);
       this.roomServices.updateRoom(res).subscribe(res => {
         this.notifEvent.emit();
+        this.userServices.sendNotification('rooms');
       });
-
+      this.buttonNameToDisable = '';
     });
   }
   removeRoom(roomId){
-    console.log(roomId);
     this.roomServices.deleteRoom(roomId).subscribe(res => {
-      console.log(res);
       this.notifEvent.emit();
     })
   }
@@ -162,7 +178,6 @@ export class HomeComponent implements OnInit {
     if(this.user != null){
       this.user.roomId = null;
       this.userServices.updateUser(this.user.userId,this.user).subscribe(res => {
-        console.log(res);
         this.notifEvent.emit();
       })
   }
@@ -171,7 +186,6 @@ export class HomeComponent implements OnInit {
     if(this.user != null){
       this.user.roomId = room.roomId;
         this.userServices.updateUser(this.user.userId,this.user).subscribe(res => {
-          console.log(res);
           this.notifEvent.emit();
         })
     }
@@ -184,6 +198,7 @@ export class HomeComponent implements OnInit {
       userId: this.user.userId,
       name: this.user.name,
       connectionId: '',
+      isDead: false,
       profilePicture:'/assets/images/'+ (this.user.gender == 0 ? 'unknown_male.png':'unknown_female.png')
     }
     sessionStorage.setItem('currentUser',JSON.stringify(this.user));
@@ -274,4 +289,10 @@ export class HomeComponent implements OnInit {
         return actions;
       }
 
+      isbuttonDisabled(btn:string){
+        if(btn == this.buttonNameToDisable)
+         return true;
+         else
+         return false;
+      }
 }

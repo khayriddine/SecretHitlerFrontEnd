@@ -46,3 +46,17 @@ img{
   background-image: url('/assets/images/texture-wood-5.jpg');
   background-size: contain;
 }
+
+/*margin-bottom: 18%; */
+app-player-car{
+  margin-bottom: 18%;
+}
+.example-viewport {
+  height: 100%;
+  width: 100%;
+  border: 1px solid black;
+}
+
+.example-item {
+  width: 1200px;
+}

@@ -15,6 +15,8 @@ import { Room } from '../models/Room';
 export class UserService {
   private user : Subject<User> = new Subject<User>();
   public user$ = this.user.asObservable();
+  private notif = new Subject<string>();
+  public notif$ = this.notif.asObservable();
   roomNavigation : EventEmitter<Room>;
   private hubConnection : HubConnection;
   constructor(private http: HttpClient) {
@@ -23,6 +25,11 @@ export class UserService {
     .build();
     this.hubConnection.start();
     this.onNavigationToRoom();
+
+
+    this.hubConnection.on('Notify',(type:string) => {
+      this.notif.next(type);
+    });
    }
   updateUser(userId: number, user: User) {
     return this.http.put<User>(env.apiUrl+'api/users/'+userId,user);
@@ -55,8 +62,9 @@ export class UserService {
     return this.http.post<User>(env.apiUrl+'api/users/register',newUser);
   }
   onReceiveNotification(event: EventEmitter<any>){
-    this.hubConnection.on('ReceiveNotification',()=>{
+    this.hubConnection.on('ReceiveNotification',(t:string)=>{
       event.emit();
+      this.notif.next(t);
     });
   }
   onReceiveNewMsg(msgStream : Subject<Message>){
@@ -67,8 +75,8 @@ export class UserService {
   sendMessage(msg:Message){
     this.hubConnection.invoke("SendMessage",msg);
   }
-  sendNotification(){
-    this.hubConnection.invoke("Notify");
+  sendNotification(type: string){
+    this.hubConnection.invoke("Notify",type);
   }
   navigateToRoom(room : Room){
     console.log(room);

@@ -93,7 +93,7 @@
 
 
       </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <mat-paginator #roomsTablePaginator="matPaginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
       <h4>Create a Room</h4>
       <div *ngIf="(user != null)" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap="32px" fxLayoutAlign="center" >
 
@@ -104,9 +104,6 @@
         <mat-form-field fxFlex.gt-sm="30%" fxFlex="100%" >
           <mat-label>Select Board size</mat-label>
           <mat-select [(ngModel)]="newRoom.numberOfPlayer">
-            <mat-option value="2">2</mat-option>
-            <mat-option value="3">3</mat-option>
-            <mat-option value="4">4</mat-option>
             <mat-option value="5">5</mat-option>
             <mat-option value="6">6</mat-option>
             <mat-option value="7">7</mat-option>
@@ -116,7 +113,7 @@
           </mat-select>
         </mat-form-field>
         <div fxLayout fxFlexAlign="center">
-          <button  mat-button color="primary" (click)="createRoom()">Submit</button>
+          <button  mat-button color="primary" [disabled]="isbuttonDisabled('createRoom')" (click)="createRoom()">Submit</button>
         </div>
 
     </div>
@@ -161,7 +158,7 @@
 
 
       </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <mat-paginator #usersTablePaginator="matPaginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 

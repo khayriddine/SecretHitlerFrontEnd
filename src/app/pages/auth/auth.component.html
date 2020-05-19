@@ -1,4 +1,6 @@
-<h2>Login</h2>
+<mat-tab-group>
+  <mat-tab label="Login">
+    <h2>Login</h2>
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
         <label for="name">Name</label>
@@ -21,11 +23,9 @@
         </button>
     </div>
 </form>
-<hr>
-<h2>logout</h2>
-<button (click)="onLogOut()">Log Out</button>
-<hr>
-<h2>registeration</h2>
+  </mat-tab>
+  <mat-tab label="Registeration">
+    <h2>Registeration</h2>
 <form (ngSubmit)="onRegister()" #registrationForm="ngForm">
 <div class="form-group">
   <label for="name">Name</label>
@@ -43,6 +43,8 @@
   <label for="gender">Gender</label>
   <input type="text" class="form-control" name="gender" [(ngModel)]="newUser.gender" required>
 </div>
-<button type="submit">Register</button>
-<button type="button" (click)="resetRegistration();registrationForm.reset()">Reset</button>
+<button type="submit" [disabled]="isbuttonDisabled('onRegister')">Register</button>
+<button type="button"  (click)="resetRegistration();registrationForm.reset()">Reset</button>
 </form>
+  </mat-tab>
+</mat-tab-group>

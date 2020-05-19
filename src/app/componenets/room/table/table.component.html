@@ -7,10 +7,9 @@
     </div>
   </div>
   <div fxFlex="85%">
-    <div class="container" fxLayout="column" fxLayoutAlign="center"  >
-      <div fxFlex="10%" class="fail-round" ></div>
-      <div fxFlex="45%" class="liberal-board"></div>
-      <div fxFlex="45%" class="fascist-board"></div>
+    <div class="container" fxLayout="column" fxLayoutAlign="center">
+      <div fxFlex="45%" [ngClass]="defineLiberalClass()"></div>
+      <div fxFlex="45%" [ngClass]="defineFascistClass()"></div>
     </div>
   </div>
 </div>

@@ -31,6 +31,8 @@ export class GameService {
   public voteRequest$ = this.voteRequest.asObservable();
   private vote = new Subject<any>();
   public vote$ = this.vote.asObservable();
+  private notification = new Subject<string>();
+  public notification$ = this.notification.asObservable();
 
 
   constructor() {
@@ -41,8 +43,8 @@ export class GameService {
     this.hubConnection = new HubConnectionBuilder().withUrl(env.hubUrl+'hubGames')
     .build();
     await this.hubConnection.start();
-    console.log('Connection started');
-    console.log(currentPlayer);
+    //console.log('Connection started');
+    //console.log(currentPlayer);
 
     this.hubConnection.on('NewPlayerArrived', (p : Player) => {
       this.player.next(p);
@@ -66,12 +68,12 @@ export class GameService {
       this.gameUpdate.next(game);
     });
     this.hubConnection.on('ReceiveSignal',(signal : SignalInfo) => {
-      console.log('receive signal');
-      console.log(signal);
+      //console.log('receive signal');
+      //console.log(signal);
       this.signal.next(signal);
     });
     this.hubConnection.on('ReceiveSignal_test',() => {
-      console.log('test signal');
+      //console.log('test signal');
     });
     this.hubConnection.on('GameStatusUpdated',(game : Game) => {
       this.gameUpdate.next(game);
@@ -81,6 +83,9 @@ export class GameService {
     });
     this.hubConnection.on('ReceiveVote',(vote:Vote)=>{
       this.vote.next(vote);
+    });
+    this.hubConnection.on('ReceiveNotif',(notif:string) =>{
+      this.notification.next(notif);
     })
     //BroadcastGameStatus
     this.hubConnection.invoke('NewPlayer', currentPlayer);
@@ -105,13 +110,16 @@ export class GameService {
       userId : userId,
       signal : signal
     };
-    console.log(s);
+    //console.log(s);
     this.hubConnection.invoke('SendSignal',s);
   }
-  public requestVote(player: Player){
-    this.hubConnection.invoke('SendVoteRequest',player);
+  public requestVote(player: Player,players:string[]){
+    this.hubConnection.invoke('SendVoteRequest',player,players);
   }
   public voteReply(vote:Vote,receiver:string){
     this.hubConnection.invoke('ReplyVoteRequest',vote,receiver);
+  }
+  public notifyOtherPlayers(notif: string,connections: string[]){
+    this.hubConnection.invoke('Notify',notif,connections);
   }
 }

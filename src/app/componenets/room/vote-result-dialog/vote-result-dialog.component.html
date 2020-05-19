@@ -1,0 +1,13 @@
+<h3 *ngIf="result==false; else elseTemplate">
+  The Majority votes No
+</h3>
+<ng-template #elseTemplate>
+  <h3> The Majority votes Yes </h3>
+</ng-template>
+
+<ul>
+  <li *ngFor="let vote of data.votes;">
+    {{vote.name}} : {{vote.value ==1 ? 'Yes' : 'No'}}
+  </li>
+</ul>
+<button mat-button (click)="onNoClick()">Cancel</button>

@@ -7,4 +7,5 @@ export class Player {
   signal?:any;
   profilePicture?:string;
   secretRole? :SecretRole;
+  isDead: boolean
 }

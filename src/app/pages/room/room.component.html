@@ -46,57 +46,54 @@
 
 <div class="container" fxLayout="column" fxLayoutAlign="center">
 
-  <div fxFlex="15%" class="emptyBox">
+  <div fxFlex="10%" class="emptyBox">
     <div class="container" fxLayout="row" fxLayoutAlign="center">
       <div *ngFor="let item of top_table" [fxFlex]="item.rowsRatio">
         <div *ngIf="item.player!= null" class="container" fxLayout="row" fxLayoutAlign="center">
-          <div fxFlex="50%">
-            <button [disabled]="!isMyTurn() || (isMyTurn() && game.inHandCards.length == 2)"
-             (click)="onChancelorChosen(item.player)">
-             <img *ngIf="item.player.profilePicture!=null" [src]="item.player.profilePicture" [title]="item.player.name">
-            </button>
-          </div>
-          <div fxFlex="50%"></div>
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+            <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(item.player.isDead)" [player]='item.player' [mine]='false' [showSecretRole]='showSecretRole'></app-player-card>
+         </div>
         </div>
       </div>
     </div>
   </div>
-  <div fxFlex="70%" class="mid-table">
+  <div fxFlex="80%" class="mid-table">
     <div class="container" fxLayout="row" fxLayoutAlign="center">
-      <div fxFlex="10%" class="emptyBox">
+      <div fxFlex.gt-sm="8%" fxFlex="16%" class="emptyBox">
         <div class="container" fxLayout="column" fxLayoutAlign="center">
           <div *ngFor="let item of left_table" [fxFlex]="item.rowsRatio" [ngClass]="'item.class'">
             <div *ngIf="item.player!= null" class="container" fxLayout="column" fxLayoutAlign="center">
-              <div fxFlex="50%">
-                <button [disabled]="!isMyTurn()|| (isMyTurn() && game.inHandCards.length == 2)"
-                (click)="onChancelorChosen(item.player)">
-                <img *ngIf="item.player.profilePicture!=null" [src]="item.player.profilePicture" [title]="item.player.name">
-              </button>
-            </div>
+              <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+                <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(item.player.isDead)" [player]='item.player' [mine]='false' [showSecretRole]='showSecretRole'></app-player-card>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div fxFlex="80%" class="table">
-        <app-table></app-table>
+      <div fxFlex.gt-sm="84%" fxFlex="68%" class="table">
+        <app-table [game]="game"></app-table>
       </div>
-      <div fxFlex="10%" class="emptyBox">
+      <div fxFlex.gt-sm="8%" fxFlex="16%" class="emptyBox">
         <div class="container" fxLayout="column" fxLayoutAlign="center">
           <div *ngFor="let item of right_table" [fxFlex]="item.rowsRatio" [ngClass]="item.class">
             <div *ngIf="item.player!= null" class="container" fxLayout="column" fxLayoutAlign="center">
-              <div fxFlex="50%"><button [disabled]="!isMyTurn() || (isMyTurn() && game.inHandCards.length == 2)" (click)="onChancelorChosen(item.player)"><img *ngIf="item.player.profilePicture!=null" [src]="item.player.profilePicture" [title]="item.player.name"></button></div>
+              <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+                <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(item.player.isDead)" [player]='item.player' [mine]='false' [showSecretRole]='showSecretRole'></app-player-card>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div fxFlex="15%" class="emptyBox">
+  <div fxFlex="10%" class="emptyBox">
     <div class="container" fxLayout="row" fxLayoutAlign="center">
       <div *ngFor="let item of bot_table" [fxFlex]="item.rowsRatio" [class.class-name]="item.class">
-        <div *ngIf="item.player!= null && item.player.userId == currentPlayer.userId" class="container" fxLayout="row" fxLayoutAlign="center">
-          <div fxFlex="50%"><img [src]="secretRoleImg(item.player.secretRole)" [alt]="item.player.name"></div>
-          <div fxFlex="50%"><img *ngIf="item.player.profilePicture!=null" [src]="item.player.profilePicture" [title]="item.player.name"></div>
+        <div *ngIf="item.player!= null && currentPlayer!=null && item.player.userId == currentPlayer.userId" class="container" >
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+              <app-player-card (avatarBtnClicked)="toggleAvatar($event)"  [player]='item.player' [showSecretRole]='showSecretRole' [mine]='true'></app-player-card>
+          </div>
+
       </div>
       </div>
     </div>

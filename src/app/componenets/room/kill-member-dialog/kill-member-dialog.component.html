@@ -1,0 +1,14 @@
+
+<h3>Garanted Action : Execution</h3>
+<p>
+  You have the ability to kill one of the remainig members
+  <br> If the chosen one is Hitle the game ends ( Liberal victory)
+  <br> If It is not you can not know whether you killed a Fscist or Liberal
+</p>
+<ul>
+  <li *ngFor="let player of players; let i = index"><input type="radio" name="discarded" [(ngModel)]="dead" [id]="'cb'+i" [value]="player.userId"/>
+    <label [for]="'cb'+i">{{player.name}}</label>
+  </li>
+</ul>
+<button mat-button [mat-dialog-close]="dead" cdkFocusInitial>Confirm</button>
+<button mat-button (click)="onNoClick()">Cancel</button>

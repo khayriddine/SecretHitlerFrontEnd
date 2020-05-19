@@ -32,18 +32,14 @@ export class RtcService {
     //this.onStream.next({ id: userId, data:stream });
 
     peer.on('signal',data => {
-      console.log('signal');
-      console.log(data);
       const stringData = JSON.stringify(data);
       this.onSignalToSend.next({ userId: userId, data: stringData });
     });
     peer.on('stream', data => {
-      console.log('stream');
       this.onStream.next({ userId: userId, data });
     });
 
     peer.on('connect', () => {
-      console.log('connect');
       this.onConnect.next({ userId: userId, data: null });
     });
     return peer;
@@ -52,13 +48,10 @@ export class RtcService {
   public signalPeer(userId: number, signal: string, stream: any) {
 
     const signalObject = JSON.parse(signal);
-    console.log(signalObject);
 
     if (this.currentPeer) {
-      console.log('exist:'+userId);
       this.currentPeer.signal(signalObject);
     } else {
-      console.log('no exist:'+userId);
       this.currentPeer = this.createPeer(stream, userId, false);
       this.currentPeer.signal(signalObject);
     }

@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { first } from 'rxjs/operators';
 import { User } from 'src/app/models/User';
 import { UserService } from 'src/app/services/user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-auth',
@@ -21,6 +22,7 @@ export class AuthComponent implements OnInit {
     imagePath: '',
     status: 1
   };
+  buttonNameToDisable:string = '';
   loginForm : FormGroup;
   loading = false;
   submitted = false;
@@ -31,7 +33,8 @@ export class AuthComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private userService: UserService) {
+    private userService: UserService,
+    private notifSnackBar: MatSnackBar) {
       if (this.authService.currentUser) {
         //this.router.navigate(['/']);
     }
@@ -60,11 +63,9 @@ export class AuthComponent implements OnInit {
         .subscribe(
             data => {
                 this.router.navigate([this.returnUrl]);
-                console.log(data);
                 this.loading = true;
             },
             error => {
-                console.log(error);
                 this.loading = false;
             });
   }
@@ -72,8 +73,11 @@ export class AuthComponent implements OnInit {
     this.authService.logout();
   }
   onRegister(){
+    this.buttonNameToDisable = 'onRegister';
     this.userService.registerNewUser(this.newUser).subscribe(res => {
-      console.log(res);
+      this.buttonNameToDisable = '';
+      this.openSnackBar('Succesfull registeration Now you can log In','Dismiss');
+
     })
 
   }
@@ -88,6 +92,17 @@ export class AuthComponent implements OnInit {
       status: 1
     };
 
+  }
+  isbuttonDisabled(btn : string){
+    if(btn == this.buttonNameToDisable)
+    return true;
+    else
+    return false;
+  }
+  openSnackBar(message: string, action: string) {
+    this.notifSnackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 }
 

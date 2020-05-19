@@ -36,7 +36,14 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { DiscardDialogComponent } from './componenets/room/discard-dialog/discard-dialog.component';
 import {MatRadioModule} from '@angular/material/radio';
 import { VoteDialogComponent } from './componenets/room/vote-dialog/vote-dialog.component';
+import { PeekCardsDialogComponent } from './componenets/room/peek-cards-dialog/peek-cards-dialog.component';
+import { KillMemberDialogComponent } from './componenets/room/kill-member-dialog/kill-member-dialog.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatCardModule} from '@angular/material/card';
+import { PlayerCardComponent } from './componenets/room/player-card/player-card.component';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import { VoteResultDialogComponent } from './componenets/room/vote-result-dialog/vote-result-dialog.component';
+import {MatTabsModule} from '@angular/material/tabs';
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,6 +61,10 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     LeftTableComponent,
     DiscardDialogComponent,
     VoteDialogComponent,
+    PeekCardsDialogComponent,
+    KillMemberDialogComponent,
+    PlayerCardComponent,
+    VoteResultDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,11 +89,13 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatGridListModule,
     DragDropModule,
     MatRadioModule,
-    MatSnackBarModule
-
+    MatSnackBarModule,
+    MatCardModule,
+    ScrollingModule,
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [DiscardDialogComponent,VoteDialogComponent]
+  entryComponents: [DiscardDialogComponent,VoteDialogComponent,KillMemberDialogComponent,PeekCardsDialogComponent,VoteResultDialogComponent]
 })
 export class AppModule { }

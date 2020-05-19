@@ -1,0 +1,12 @@
+
+<h3>Garanted Action : Peek Tiles</h3>
+<p>
+  You have the ability to see the upcoming next three cards
+  <br> and discuss it with the remaining Members
+</p>
+<ul>
+  <li *ngFor="let card of cards; let i = index">
+    <label [for]="'cb'+i"><img [src]="cardPicture(card.cardType)" /></label>
+  </li>
+</ul>
+<button mat-button (click)="onNoClick()">Exit</button>

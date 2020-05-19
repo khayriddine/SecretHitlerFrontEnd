@@ -12,6 +12,9 @@ export class Game{
   discardedCards: Card[];
   inHandCards: Card[];
   onTableCards: Card[];
+  nbreOfPeeks: number;
+  nbreOfKills: number;
+  nbreOfInvestigation: number;
   constructor(){
     this.status = GameStatus.NotReady;
     this.numberOfRounds = 0;
@@ -20,8 +23,12 @@ export class Game{
     this.discardedCards = [];
     this.inHandCards = [];
     this.onTableCards = [];
-
+    this.nbreOfKills = 0;
+    this.nbreOfPeeks =0;
+    this.nbreOfInvestigation = 0;
     this.newGameCards();
+    this.shuffle(this.remainingCards);
+
   }
   startGame(){
 
@@ -33,6 +40,11 @@ export class Game{
 
     }
     this.onTableCards.push(this.remainingCards.pop());
+  }
+  incrementFailsTracker(){
+    if(this.electionFailTracker == null)
+    this.electionFailTracker = 0;
+    this.electionFailTracker++;
   }
   assignPlayers(){
     let roles: SecretRole[];
@@ -50,23 +62,23 @@ export class Game{
       break;
      }
      case 7: {
-      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
       break;
      }
      case 8: {
-      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
       break;
      }
      case 9: {
-      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Fascist,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
       break;
      }
      case 10: {
-      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
+      roles = [SecretRole.Hitler,SecretRole.Fascist,SecretRole.Fascist,SecretRole.Fascist,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal,SecretRole.Liberal];
       break;
      }
    }
-   this.shuffleRoles(roles);
+   this.shuffle(roles);
   this.players.forEach((p:Player,index:number) => {
     p.secretRole = roles[index];
   });
@@ -92,11 +104,10 @@ export class Game{
       {cardType: CardType.Liberal, imagePath:''},
       {cardType: CardType.Liberal, imagePath:''},
       {cardType: CardType.Fascist, imagePath:''},
+      {cardType: CardType.Liberal, imagePath:''},
     ];
   }
-  shuffleCards(){
 
-  }
   discard(index: number){
     let card : Card = this.inHandCards[index];
 
@@ -113,6 +124,7 @@ export class Game{
   }
   resetCards(){
     this.remainingCards.push(...this.discardedCards);
+    this.shuffle(this.remainingCards);
   }
   putCardOnTable(index: number){
     this.discard(index);
@@ -131,5 +143,28 @@ export class Game{
     this.inHandCards = game.inHandCards;
     this.onTableCards = game.onTableCards;
   }
+  nbreOfFascistCard(){
+    return this.onTableCards.filter(c => c.cardType == CardType.Fascist).length;
+  }
+  nbreOfLiberalCard(){
+    return this.onTableCards.filter(c => c.cardType == CardType.Liberal).length;
+  }
+  shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
 
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+  }
 }

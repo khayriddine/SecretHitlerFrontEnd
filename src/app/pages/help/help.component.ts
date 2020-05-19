@@ -25,7 +25,8 @@ export class HelpComponent implements OnInit {
     this.player = {
       userId : user.userId,
       name : user.name,
-      connectionId :''
+      connectionId :'',
+      isDead : false
     };
     this.gameService.startConnection(this.player);
     navigator.mediaDevices.getUserMedia({ video: (user.name == 'khayri'), audio: true }).then(stream => this.stream = stream);
@@ -55,7 +56,6 @@ export class HelpComponent implements OnInit {
   }
   async create(){
 
-    console.log(this.stream);
     const peer = this.rtcService.createPeer(this.stream, 1, true);
     this.rtcService.currentPeer = peer;
     /*

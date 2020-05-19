@@ -1,11 +1,89 @@
 .fascist-board{
-   background-image: url('/assets/images/fascist_board.png');
-  background-size: 100% 100%;
-  background-repeat:no-repeat;
-  height: 100%;
+  background-image: url('/assets/images/fascist_board.png');
+ background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.fascist-board0{
+  background-image: url('/assets/images/fascist_board.png');
+ background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.fascist-board1{
+  background-image: url('/assets/images/fascist_board1.png');
+ background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.fascist-board2{
+  background-image: url('/assets/images/fascist_board2.png');
+ background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.fascist-board3{
+  background-image: url('/assets/images/fascist_board3.png');
+ background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.fascist-board4{
+  background-image: url('/assets/images/fascist_board4.png');
+ background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.fascist-board5{
+  background-image: url('/assets/images/fascist_board5.png');
+ background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.fascist-board6{
+  background-image: url('/assets/images/fascist_board6.png');
+ background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
 }
 .liberal-board{
   background-image: url('/assets/images/liberal_board.png');
+  background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.liberal-board0{
+  background-image: url('/assets/images/liberal_board0.png');
+  background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.liberal-board1{
+  background-image: url('/assets/images/liberal_board1.png');
+  background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.liberal-board2{
+  background-image: url('/assets/images/liberal_board2.png');
+  background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.liberal-board3{
+  background-image: url('/assets/images/liberal_board3.png');
+  background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.liberal-board4{
+  background-image: url('/assets/images/liberal_board4.png');
+  background-size: 100% 100%;
+ background-repeat:no-repeat;
+ height: 100%;
+}
+.liberal-board5{
+  background-image: url('/assets/images/liberal_board5.png');
   background-size: 100% 100%;
  background-repeat:no-repeat;
  height: 100%;
@@ -31,4 +109,17 @@
 .container{
   height: 100%;
   display: block;
+}
+
+.container-bigger{
+/* min-width: 1600px;*/
+}
+.example-viewport {
+  height: 100%;
+  width: 100%;
+  border: 1px solid black;
+}
+
+.example-item {
+  width: 1200px;
 }

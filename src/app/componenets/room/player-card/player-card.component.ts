@@ -13,6 +13,7 @@ export class PlayerCardComponent implements OnInit {
   @Input() showSecretRole : boolean;
   @Input() mine : boolean;
   @Input() dis: boolean;
+  @Input() isPresident: boolean = true;
   @Output() avatarBtnClicked : EventEmitter<Player> = new EventEmitter<Player>();
   constructor() { }
 

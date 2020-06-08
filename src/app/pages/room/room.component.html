@@ -51,7 +51,7 @@
       <div *ngFor="let item of top_table" [fxFlex]="item.rowsRatio">
         <div *ngIf="item.player!= null" class="container" fxLayout="row" fxLayoutAlign="center">
           <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
-            <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(item.player.isDead)" [player]='item.player' [mine]='false' [showSecretRole]='showSecretRole'></app-player-card>
+            <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(item.player.isDead)" [player]='item.player' [isPresident]="game.actualPlayer().userId == item.player.userId" [showSecretRole]='showSecretRole'></app-player-card>
          </div>
         </div>
       </div>
@@ -64,7 +64,7 @@
           <div *ngFor="let item of left_table" [fxFlex]="item.rowsRatio" [ngClass]="'item.class'">
             <div *ngIf="item.player!= null" class="container" fxLayout="column" fxLayoutAlign="center">
               <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
-                <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(item.player.isDead)" [player]='item.player' [mine]='false' [showSecretRole]='showSecretRole'></app-player-card>
+                <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(item.player.isDead)" [player]='item.player' [isPresident]="game.actualPlayer().userId == item.player.userId"[showSecretRole]='showSecretRole'></app-player-card>
               </div>
             </div>
           </div>
@@ -78,7 +78,7 @@
           <div *ngFor="let item of right_table" [fxFlex]="item.rowsRatio" [ngClass]="item.class">
             <div *ngIf="item.player!= null" class="container" fxLayout="column" fxLayoutAlign="center">
               <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
-                <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(item.player.isDead)" [player]='item.player' [mine]='false' [showSecretRole]='showSecretRole'></app-player-card>
+                <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(item.player.isDead)" [player]='item.player' [isPresident]="game.actualPlayer().userId == item.player.userId" [showSecretRole]='showSecretRole'></app-player-card>
               </div>
             </div>
           </div>
@@ -88,12 +88,39 @@
   </div>
   <div fxFlex="10%" class="emptyBox">
     <div class="container" fxLayout="row" fxLayoutAlign="center">
-      <div *ngFor="let item of bot_table" [fxFlex]="item.rowsRatio" [class.class-name]="item.class">
-        <div *ngIf="item.player!= null && currentPlayer!=null && item.player.userId == currentPlayer.userId" class="container" >
+      <div *ngIf="bot_table!=null && bot_table[0]!=null" [fxFlex]="bot_table[0].rowsRatio" [class.class-name]="bot_table[0].class">
+        <div *ngIf="bot_table[0].player!= null && currentPlayer!=null && game.actualPlayer() != null" class="container" >
           <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
-              <app-player-card (avatarBtnClicked)="toggleAvatar($event)"  [player]='item.player' [showSecretRole]='showSecretRole' [mine]='true'></app-player-card>
+              <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(bot_table[0].player.isDead)" [isPresident]="game.actualPlayer().userId == bot_table[0].player.userId" [player]='bot_table[0].player'  [showSecretRole]='showSecretRole' ></app-player-card>
           </div>
-
+      </div>
+      </div>
+      <div *ngIf="bot_table!=null && bot_table[1]!=null" [fxFlex]="bot_table[1].rowsRatio" [class.class-name]="bot_table[0].class">
+        <div *ngIf="bot_table[1].player!= null && currentPlayer!=null && game.actualPlayer() != null" class="container" >
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+              <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(bot_table[1].player.isDead)" [isPresident]="game.actualPlayer().userId == bot_table[1].player.userId" [player]='bot_table[1].player'  [showSecretRole]='showSecretRole' ></app-player-card>
+          </div>
+      </div>
+      </div>
+      <div *ngIf="bot_table!=null && bot_table[2]!=null" [fxFlex]="bot_table[2].rowsRatio" [class.class-name]="bot_table[0].class">
+        <div *ngIf="bot_table[2].player!= null && currentPlayer!=null && game.actualPlayer() != null" class="container" >
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+              <app-player-card (avatarBtnClicked)="toggleAvatar($event);showMyRole()"  [player]='bot_table[2].player' [isPresident]="game.actualPlayer().userId == bot_table[2].player.userId"  [showSecretRole]='showSecretRole||mySecreteRole' ></app-player-card>
+          </div>
+      </div>
+      </div>
+      <div *ngIf="bot_table!=null && bot_table[3]!=null" [fxFlex]="bot_table[3].rowsRatio" [class.class-name]="bot_table[0].class">
+        <div *ngIf="bot_table[3].player!= null && currentPlayer!=null && game.actualPlayer() != null" class="container" >
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+              <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(bot_table[3].player.isDead)" [isPresident]="game.actualPlayer().userId == bot_table[3].player.userId" [player]='bot_table[3].player'  [showSecretRole]='showSecretRole' ></app-player-card>
+          </div>
+      </div>
+      </div>
+      <div *ngIf="bot_table!=null && bot_table[4]!=null" [fxFlex]="bot_table[4].rowsRatio" [class.class-name]="bot_table[0].class">
+        <div *ngIf="bot_table[4].player!= null && currentPlayer!=null && game.actualPlayer() != null" class="container" >
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+              <app-player-card (avatarBtnClicked)="onChancelorChosen($event)" [dis]="clickable(bot_table[4].player.isDead)" [isPresident]="game.actualPlayer().userId == bot_table[4].player.userId" [player]='bot_table[4].player'  [showSecretRole]='showSecretRole' ></app-player-card>
+          </div>
       </div>
       </div>
     </div>

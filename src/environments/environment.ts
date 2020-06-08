@@ -4,10 +4,10 @@
 
 export const environment = {
     production: false,
-     apiUrl :  'http://localhost:5000/',
-   hubUrl :  'http://localhost:5000/'
-  //apiUrl :  'https://secret-hitler-backend.herokuapp.com/',
-  //hubUrl :  'https://secret-hitler-backend.herokuapp.com/'
+    // apiUrl :  'http://localhost:5000/',
+   //hubUrl :  'http://localhost:5000/'
+  apiUrl :  'https://secret-hitler-backend.herokuapp.com/',
+  hubUrl :  'https://secret-hitler-backend.herokuapp.com/'
 };
 
 /*

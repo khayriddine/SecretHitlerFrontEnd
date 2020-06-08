@@ -5,7 +5,9 @@ export class Player {
   name: string;
   connectionId: string;
   signal?:any;
+  roomId?:number;
   profilePicture?:string;
   secretRole? :SecretRole;
-  isDead: boolean
+  isDead: boolean;
+  isDisconnected:boolean;
 }

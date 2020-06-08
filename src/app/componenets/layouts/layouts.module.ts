@@ -12,6 +12,9 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatCardModule } from '@angular/material/card';
+import {MatBadgeModule} from '@angular/material/badge';
+
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -27,7 +30,9 @@ import { MatMenuModule } from '@angular/material/menu';
     MatSidenavModule,
     AppRoutingModule,
     FlexLayoutModule,
-    MatMenuModule
+    MatMenuModule,
+    MatCardModule,
+    MatBadgeModule,
   ],
   exports:[
     HeaderComponent,

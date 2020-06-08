@@ -44,6 +44,14 @@ import { PlayerCardComponent } from './componenets/room/player-card/player-card.
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import { VoteResultDialogComponent } from './componenets/room/vote-result-dialog/vote-result-dialog.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatListModule} from '@angular/material/list';
+import { VictoryDialogComponent } from './componenets/room/victory-dialog/victory-dialog.component';
+import { ChooseIconDialogComponent } from './componenets/dialogs/choose-icon-dialog/choose-icon-dialog.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { InvestigatePlayerDialogComponent } from './componenets/room/investigate-player-dialog/investigate-player-dialog.component';
+import { ChoosePresidentDialogComponent } from './componenets/room/choose-president-dialog/choose-president-dialog.component';
+import { ShowUserDialogComponent } from './componenets/dialogs/show-user-dialog/show-user-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -65,6 +73,11 @@ import {MatTabsModule} from '@angular/material/tabs';
     KillMemberDialogComponent,
     PlayerCardComponent,
     VoteResultDialogComponent,
+    VictoryDialogComponent,
+    ChooseIconDialogComponent,
+    InvestigatePlayerDialogComponent,
+    ChoosePresidentDialogComponent,
+    ShowUserDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,9 +106,14 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatCardModule,
     ScrollingModule,
     MatTabsModule,
+    MatListModule,
+    NgxChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [DiscardDialogComponent,VoteDialogComponent,KillMemberDialogComponent,PeekCardsDialogComponent,VoteResultDialogComponent]
+  entryComponents: [DiscardDialogComponent,VoteDialogComponent,
+    KillMemberDialogComponent,PeekCardsDialogComponent,VoteResultDialogComponent,
+    VictoryDialogComponent,ChooseIconDialogComponent,InvestigatePlayerDialogComponent,
+    ChoosePresidentDialogComponent,ShowUserDialogComponent]
 })
 export class AppModule { }

@@ -26,7 +26,8 @@ export class HelpComponent implements OnInit {
       userId : user.userId,
       name : user.name,
       connectionId :'',
-      isDead : false
+      isDead : false,
+      isDisconnected:false,
     };
     this.gameService.startConnection(this.player);
     navigator.mediaDevices.getUserMedia({ video: (user.name == 'khayri'), audio: true }).then(stream => this.stream = stream);

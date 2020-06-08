@@ -13,15 +13,26 @@
   <button mat-icon-button (click)="toggleSideBar()" *ngIf="user != null">
     <mat-icon>menu</mat-icon>
   </button>
-  <button mat-button (click)="goTo('home')">
+  <button mat-button (click)="goTo('')">
     Secret Hitler
   </button>
   <div fxFlex fxLayout="row"  fxLayoutAlign="flex-end">
     <ul fxLayout="row" fxLayoutGap="10px">
-      <li *ngIf="user != null">
-        <button mat-icon-button>
-          <mat-icon>notifications</mat-icon>
+      <li>
+        <button mat-icon-button (click)="refresh()">
+          <mat-icon>refresh</mat-icon>
         </button>
+    </li>
+      <li *ngIf="user != null">
+        <button mat-icon-button [matMenuTriggerFor]="notifications">
+          <mat-icon *ngIf="notifs.length >0" [matBadge]="notifs.length" matBadgeColor="warn" MatBadgeSize="small">notifications</mat-icon>
+          <mat-icon *ngIf="notifs.length ==0" >notifications</mat-icon>
+        </button>
+        <mat-menu #notifications="matMenu">
+          <mat-nav-list>
+            <a mat-list-item *ngFor="let notif of notifs"> {{notif}} </a>
+          </mat-nav-list>
+      </mat-menu>
     </li>
       <li *ngIf="user != null;else noUser">
         <button mat-button [matMenuTriggerFor]="menu">

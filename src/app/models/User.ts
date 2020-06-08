@@ -8,7 +8,7 @@ export class User {
   imagePath: string;
   gender: number;
   status: number = 1;
-  friends: Friend[]
+  friends: Friend[];
   room?: Room;
   roomId?: number;
 }

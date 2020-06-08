@@ -19,7 +19,7 @@ export class TableComponent implements OnInit {
       Object.assign(this.game,g);
     }))
   }
-  defineFascistClass(){
+  defineFascistClass(){//
     if(this.game == null)
       return'fascist-board';
       else

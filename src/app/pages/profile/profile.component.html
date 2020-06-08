@@ -1,23 +1,72 @@
-<p>profile</p>
-<ul *ngIf="user != null">
-  <li>name : {{user.name}}</li>
-  <li>email : {{user.email}}</li>
-  <li>status : {{user.status}}</li>
-  <li>gender : {{user.gender}}</li>
-  <li *ngIf="user.friends != null">friends ({{user.friends.length}})
-    <ul>
-      <li *ngFor="let f of user.friends |friendList:1">name : {{f.name}}</li>
-    </ul>
-  </li>
-  <li *ngIf="user.friends != null">sending
-    <ul>
-      <li *ngFor="let f of user.friends |friendList:2">name : {{f.name}}</li>
-    </ul>
-  </li>
-  <li *ngIf="user.friends != null">pending
-    <ul>
-      <li *ngFor="let f of user.friends |friendList:3">name : {{f.name}}</li>
-    </ul>
-  </li>
+<div fxLayout="row"  fxLayoutAlign="center">
+<div fxFlex.gt-sm="90%" fxFlex="80%">
+  <mat-list role="list">
+    <mat-list-item role="listitem">{{user.name}}</mat-list-item>
+    <mat-list-item role="listitem">{{user.email}}</mat-list-item>
+    <mat-list-item role="listitem">{{"user.level"}}</mat-list-item>
+  </mat-list>
+</div>
+<div fxFlex.gt-sm="10%" fxFlex="20%">
+  <img  class="avatar" [src]="user.imagePath" [alt]="user.name" (click)="changeIcon()">
+</div>
+</div>
+<div fxLayout.gt-sm="row" fxLayout="column" fxLayoutAlign="center" class="container">
+  <div fxFlex.gt-sm="40%" fxFlex>
+    <ngx-charts-pie-chart
+  [scheme]="colorScheme"
+  [results]="single"
+  [gradient]="gradient"
+  [labels]="showLabels"
+  [doughnut]="isDoughnut"
+  >
+</ngx-charts-pie-chart>
+  </div>
+  <div fxFlex.gt-sm="60%">
+    <ngx-charts-line-chart
+  [scheme]="colorScheme"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxis]="xAxis"
+  [yAxis]="yAxis"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  [timeline]="timeline"
+  [results]="multi"
+  >
+</ngx-charts-line-chart>
+  </div>
+</div>
+<div fxLayout="row" fxLayoutAlign="center">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-</ul>
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef> Weight </th>
+      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef> Symbol </th>
+      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

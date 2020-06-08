@@ -6,6 +6,9 @@ import { first } from 'rxjs/operators';
 import { User } from 'src/app/models/User';
 import { UserService } from 'src/app/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ChooseIconDialogComponent } from 'src/app/componenets/dialogs/choose-icon-dialog/choose-icon-dialog.component';
+import { Gender } from 'src/app/models/Enumerations';
 
 @Component({
   selector: 'app-auth',
@@ -13,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./auth.component.css']
 })
 export class AuthComponent implements OnInit {
+  dummy: any;
   newUser : User = {
     name: '',
     password: '',
@@ -34,7 +38,8 @@ export class AuthComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private userService: UserService,
-    private notifSnackBar: MatSnackBar) {
+    private notifSnackBar: MatSnackBar,
+    public dialog : MatDialog) {
       if (this.authService.currentUser) {
         //this.router.navigate(['/']);
     }
@@ -74,11 +79,21 @@ export class AuthComponent implements OnInit {
   }
   onRegister(){
     this.buttonNameToDisable = 'onRegister';
+    if(this.newUser.imagePath == ''){
+      if(this.newUser.gender == Gender.Female){
+        this.newUser.imagePath = '/assets/images/unknown_female.png';
+      }
+      else{
+        this.newUser.imagePath = '/assets/images/unknown_male.png';
+      }
+    }
     this.userService.registerNewUser(this.newUser).subscribe(res => {
       this.buttonNameToDisable = '';
+      this.resetRegistration();
       this.openSnackBar('Succesfull registeration Now you can log In','Dismiss');
 
-    })
+
+    });
 
   }
   resetRegistration(){
@@ -102,6 +117,20 @@ export class AuthComponent implements OnInit {
   openSnackBar(message: string, action: string) {
     this.notifSnackBar.open(message, action, {
       duration: 2000,
+    });
+  }
+  openIconDialaog(){
+    const dialogRef = this.dialog.open(ChooseIconDialogComponent, {
+      data:{ level : 0 },
+      maxHeight:'50%',
+      minWidth:'350px',
+      maxWidth:'50%',
+      position: { top: '50px' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result != null)
+      this.newUser.imagePath =result;
     });
   }
 }

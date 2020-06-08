@@ -1,0 +1,16 @@
+<h3>Choose an Icon</h3>
+
+<mat-dialog-content>
+  <div class="container">
+    <ul>
+      <li *ngFor="let icon of icons; let i = index">
+        <input type="radio" name="chosen-icon" [(ngModel)]="chosenIcon" [id]="'cb'+i" [value]="icon"/>
+        <label [for]="'cb'+i"><img [src]="icon" /></label>
+      </li>
+    </ul>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="chosenIcon" cdkFocusInitial>Confirm</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+</mat-dialog-actions>

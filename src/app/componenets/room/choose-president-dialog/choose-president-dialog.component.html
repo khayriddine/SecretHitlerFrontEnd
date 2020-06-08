@@ -1,0 +1,14 @@
+
+<h3>Garanted Action : Call Special Election</h3>
+<p>
+  You have the ability to choose any other
+  <br> player at the table to be the next
+  <br> Presidential Candidate
+</p>
+<ul>
+  <li *ngFor="let player of players; let i = index"><input type="radio" name="discarded" [(ngModel)]="chosen" [id]="'cb'+i" [value]="player.userId"/>
+    <label [for]="'cb'+i">{{player.name}}</label>
+  </li>
+</ul>
+<button mat-button [mat-dialog-close]="chosen" cdkFocusInitial>Confirm</button>
+<button mat-button (click)="onNoClick()">Cancel</button>

@@ -24,7 +24,7 @@ export class VoteDialogComponent {
   myVote:Vote;
   constructor(
     public dialogRef: MatDialogRef<VoteDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {player:string,president:string}) {
+    @Inject(MAT_DIALOG_DATA) public data: {player:string,president:string,isDead:boolean}) {
       this.chancellorCandidate = data.player;
       this.presidentName = data.president;
       this.myVote = {

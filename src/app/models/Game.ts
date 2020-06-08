@@ -1,8 +1,10 @@
 import { Card } from './Card';
 import { Player } from './Player';
-import { GameStatus, CardType, SecretRole } from './Enumerations';
+import { GameStatus, CardType, SecretRole, WinType, TurnState } from './Enumerations';
 
 export class Game{
+  chancellorId? :string;
+  presidentId? : string;
   gameId? :number;
   status: GameStatus;
   electionFailTracker?:number;
@@ -15,6 +17,10 @@ export class Game{
   nbreOfPeeks: number;
   nbreOfKills: number;
   nbreOfInvestigation: number;
+  nbreOfPresidentSelection: number;
+  winType?:WinType;
+  chancellor? : Player;
+  turnState: TurnState;
   constructor(){
     this.status = GameStatus.NotReady;
     this.numberOfRounds = 0;
@@ -25,10 +31,11 @@ export class Game{
     this.onTableCards = [];
     this.nbreOfKills = 0;
     this.nbreOfPeeks =0;
+    this.nbreOfPresidentSelection = 0;
     this.nbreOfInvestigation = 0;
+    this.turnState = TurnState.NewTurn;
     this.newGameCards();
     this.shuffle(this.remainingCards);
-
   }
   startGame(){
 
@@ -90,24 +97,45 @@ export class Game{
     this.remainingCards = [
       {cardType: CardType.Fascist, imagePath:''},
       {cardType: CardType.Liberal, imagePath:''},
+      {cardType: CardType.Fascist, imagePath:''},
+      {cardType: CardType.Fascist, imagePath:''},
+      {cardType: CardType.Liberal, imagePath:''},
+      {cardType: CardType.Fascist, imagePath:''},
+      {cardType: CardType.Fascist, imagePath:''},
+      {cardType: CardType.Fascist, imagePath:''},
+      {cardType: CardType.Fascist, imagePath:''},
+      {cardType: CardType.Fascist, imagePath:''},
+      {cardType: CardType.Liberal, imagePath:''},
       {cardType: CardType.Liberal, imagePath:''},
       {cardType: CardType.Fascist, imagePath:''},
       {cardType: CardType.Liberal, imagePath:''},
       {cardType: CardType.Fascist, imagePath:''},
-      {cardType: CardType.Fascist, imagePath:''},
-      {cardType: CardType.Liberal, imagePath:''},
-      {cardType: CardType.Liberal, imagePath:''},
-      {cardType: CardType.Liberal, imagePath:''},
-      {cardType: CardType.Liberal, imagePath:''},
-      {cardType: CardType.Liberal, imagePath:''},
-      {cardType: CardType.Fascist, imagePath:''},
-      {cardType: CardType.Liberal, imagePath:''},
-      {cardType: CardType.Liberal, imagePath:''},
       {cardType: CardType.Fascist, imagePath:''},
       {cardType: CardType.Liberal, imagePath:''},
     ];
   }
+  //if result = 0 means no if 1 liberal wins if -1 fascist wins
+  isGameFinished(beforeTurn : boolean) : number{
+    let result : number = 0;
+    let hitler = this.players.find(p => p.secretRole == SecretRole.Hitler);
+    if(beforeTurn){
+      if(this.nbreOfFascistCard() == 3 && hitler.connectionId == this.chancellorId)
+        return -1;
+    }
+    else{
+      if(hitler.isDead == true)
+        return 1;
+      if(this.nbreOfFascistCard() == 6)
+        return -1;
+      if(this.nbreOfLiberalCard() == 5)
+      return 1;
 
+    }
+
+    return 0;
+
+
+  }
   discard(index: number){
     let card : Card = this.inHandCards[index];
 
@@ -116,7 +144,7 @@ export class Game{
   }
 
   pickCards(){
-    if(this.remainingCards.length < 2)
+    if(this.remainingCards.length < 3)
       this.resetCards();
     this.inHandCards.push(this.remainingCards.pop());
     this.inHandCards.push(this.remainingCards.pop());
@@ -132,6 +160,13 @@ export class Game{
   }
   actualPlayer():Player{
     return this.players[this.numberOfRounds%(this.players.length)];
+  }
+  lastPresidentId():number{
+    let p = this.players[(this.numberOfRounds -1)%(this.players.length)];
+    return (p != null)? p.userId:-1;
+  }
+  remainingPlayers():Player[]{
+    return this.players.filter(p => p.isDead == false);
   }
   copyValues(game: Game){
     this.gameId = game.gameId;

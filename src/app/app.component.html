@@ -1,6 +1,6 @@
 <app-header [user]="user" (toggleMenu)="toggleSideBar($event)"></app-header>
 <mat-drawer-container>
-  <mat-drawer mode="side" [opened]="toggleStatus">
+  <mat-drawer [mode]="(isMobileResolution == true)? 'over':'side'" [opened]="toggleStatus">
     <app-sidebar [user]="user"></app-sidebar>
   </mat-drawer>
   <mat-drawer-content>

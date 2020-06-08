@@ -1,6 +1,6 @@
 
 <h3>The President {{presidentName}} propose {{chancellorCandidate}} to be the Chancellor </h3>
-<ul>
+<ul *ngIf="data != null && data.isDead != null && data.isDead == false">
   <li *ngFor="let vote of possibleVotes;"><input type="radio" name="discarded" [(ngModel)]="myVote.value" [id]="'cb'+vote.value" [value]="vote"/>
     <label [for]="'cb'+vote.value"><img [src]="votePicture(vote)" /></label>
   </li>

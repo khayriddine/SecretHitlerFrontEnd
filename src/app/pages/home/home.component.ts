@@ -10,6 +10,7 @@ import { Router, ActivationEnd } from '@angular/router';
 import { Player } from 'src/app/models/Player';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-home',
@@ -25,18 +26,18 @@ export class HomeComponent implements OnInit {
   rooms: Room[];
   msgStream : Subject<Message>;
   userSubject: Subject<User>;
-  notifEvent: EventEmitter<any>;
-  subscription = new Subscription();
+  subscriptions = new Subscription();
   displayedUsersColumns: string[] = ['name', 'gender', 'status','action'];
   displayedRoomsColumns: string[] = ['name', 'admin', 'size','players','action'];
   usersDataSource = new MatTableDataSource<User>();
-  roomsDataSource = new MatTableDataSource<Room>();
+  roomsDataSource:MatTableDataSource<Room>;
 
   @ViewChild('usersTablePaginator', {static: true}) usersPaginator: MatPaginator;
   @ViewChild('roomsTablePaginator', {static: true}) roomsPaginator: MatPaginator;
   constructor(private userServices: UserService,
     private roomServices: RoomService,
-    private _router: Router) {
+    private _router: Router,
+    private dialogService:DialogService) {
     this.users = [];
     this.rooms = [];
     this.newRoom = {
@@ -48,52 +49,65 @@ export class HomeComponent implements OnInit {
    }
 
   ngOnInit(): void {
-
-    this.msgStream = new Subject<Message>();
+    let r = JSON.parse(sessionStorage.getItem('reload'));
+    if(r!=null)
+      {
+        sessionStorage.removeItem('reload');
+        window.location.reload();
+      }
     this.userSubject = new Subject<User>();
-    this.notifEvent = new EventEmitter();
-    this.notifEvent.subscribe(() => {
-      this.usersUpToDate();
-      this.roomsUpToDate();
-    });
+
     this.usersUpToDate();
-    this.roomsUpToDate();
     this.msgs = [];
-    this.msgStream.subscribe(msg => {
-      this.msgs.push(msg);
-    });
     this.userSubject.subscribe(user => {
       this.user = user;
       sessionStorage.setItem('currentUser',JSON.stringify(user));
-    })
-    this.userServices.onReceiveNewMsg(this.msgStream);
-    this.userServices.onReceiveNotification(this.notifEvent);
-    this.userServices.roomNavigation.subscribe(room => {
-      this.goToRoom(room);
+      //this.userServices.newUser(this.user.userId);
     });
-
-    this.subscription.add(this.userServices.notif$.subscribe((t:string) => {
-      switch(t){
-        case 'users': {
-          this.usersUpToDate();
-          break;
-        }
-        case 'rooms':{
-          this.roomsUpToDate();
-          break;
-        }
+    this.userServices.onReceiveNewMsg(this.msgStream);
+    this.subscriptions.add(this.userServices.goRoom$.subscribe((r:Room)=> {
+      this.goToRoom(r);
+    }));
+    this.subscriptions.add(this.userServices.room$.subscribe((r:Room) =>{
+      this.buttonNameToDisable ='';
+      if(this.rooms != null){
+        let ind = this.rooms.findIndex(ro => ro.roomId == r.roomId );
+      if(ind == -1)
+        this.rooms.push(r);
+      else
+        this.rooms[ind] = r;
+        this.roomsDataSource=  new MatTableDataSource<Room>(this.rooms);
+        this.roomsDataSource.data = this.rooms;
+        this.roomsDataSource.paginator = this.roomsPaginator;
       }
-    }))
+
+
+    }));
+    this.subscriptions.add(this.userServices.rooms$.subscribe((rs:Room[]) => {
+      if(rs != null){
+
+        this.rooms = rs;
+      this.roomsDataSource=  new MatTableDataSource<Room>(this.rooms);
+      this.roomsDataSource.paginator = this.roomsPaginator;
+      this.buttonNameToDisable = '';
+      }
+
+    }));
   }
   usersUpToDate(){
     this.user = JSON.parse(sessionStorage.getItem('currentUser'));
     if(this.user){
-
+      this.userServices.startConnection(this.user.userId);
+      //this.userServices.newUser(this.user.userId);
       this.userServices.getUserById(this.user.userId).subscribe(res => {
         this.userSubject.next(res);
+        console.log(1);
       });
     }
-
+    else{
+      this.userServices.startConnection();
+      console.log(0);
+    }
     this.userServices.getAllUsers().subscribe(res => {
       this.users = res;
       this.usersDataSource.data = this.users;
@@ -101,16 +115,7 @@ export class HomeComponent implements OnInit {
     });
 
   }
-  test(event){
-  }
 
-  roomsUpToDate(){
-     this.roomServices.getAllRooms().subscribe(res => {
-      this.rooms = res;
-      this.roomsDataSource.data = this.rooms;
-      this.roomsDataSource.paginator = this.roomsPaginator;
-    })
-  }
 
   sendMessage(content:string){
     let msg : Message = {
@@ -160,50 +165,44 @@ export class HomeComponent implements OnInit {
     this.buttonNameToDisable = 'createRoom';
     if(this.user != null)
     this.newRoom.adminId = this.user.userId;
-    this.roomServices.createRoom(this.newRoom).subscribe(res => {
-      res.usersJoining.push(this.user);
-      this.roomServices.updateRoom(res).subscribe(res => {
-        this.notifEvent.emit();
-        this.userServices.sendNotification('rooms');
-      });
-      this.buttonNameToDisable = '';
-    });
+    this.userServices.createRoom(this.newRoom);
   }
   removeRoom(roomId){
-    this.roomServices.deleteRoom(roomId).subscribe(res => {
-      this.notifEvent.emit();
-    })
+    this.userServices.removeRoom(roomId);
   }
-  leaveRoom(){
+  leaveRoom(room){
     if(this.user != null){
-      this.user.roomId = null;
-      this.userServices.updateUser(this.user.userId,this.user).subscribe(res => {
-        this.notifEvent.emit();
-      })
+      this.userServices.leaveRoom(this.user,room.roomId);
   }
+  }
+  refreshRooms(){
+    this.userServices.getRooms();
   }
   joinRoom(room){
     if(this.user != null){
-      this.user.roomId = room.roomId;
-        this.userServices.updateUser(this.user.userId,this.user).subscribe(res => {
-          this.notifEvent.emit();
-        })
+      if(room.usersJoining != null){
+        if(room.usersJoining.filter(u => u.userId == this.user.userId).length == 0){
+          this.user.roomId = room.roomId;
+          this.userServices.joinRoom(this.user);
+        }
+      }
+      else{
+        this.user.roomId = room.roomId;
+        this.userServices.joinRoom(this.user);
+      }
+
     }
   }
   play(room){
+
     this.userServices.navigateToRoom(room);
+    console.log(room);
   }
   goToRoom(room){
-    let player: Player = {
-      userId: this.user.userId,
-      name: this.user.name,
-      connectionId: '',
-      isDead: false,
-      profilePicture:'/assets/images/'+ (this.user.gender == 0 ? 'unknown_male.png':'unknown_female.png')
-    }
+
     sessionStorage.setItem('currentUser',JSON.stringify(this.user));
-    sessionStorage.setItem('currentPlayer',JSON.stringify(player));
     sessionStorage.setItem('room',JSON.stringify(room));
+    sessionStorage.setItem('newGame',JSON.stringify(true));
     this._router.navigate(['room']);
   }
   act(user : User){
@@ -265,7 +264,8 @@ export class HomeComponent implements OnInit {
             this.removeRoom(room.roomId);
             break;
           case 'Leave':
-          this.leaveRoom();
+          this.leaveRoom(room);
+          break;
           case 'Join':
             this.joinRoom(room);
             break;
@@ -283,8 +283,7 @@ export class HomeComponent implements OnInit {
 
           if(this.user.roomId == room.roomId)
           actions.push('Leave');
-          if(this.user.roomId == null)
-            actions.push('Join');
+          actions.push('Join');
         }
         return actions;
       }
@@ -295,4 +294,10 @@ export class HomeComponent implements OnInit {
          else
          return false;
       }
+
+      showPlayers(players:Player[]){
+        this.dialogService.openShowPlayerDialaog(players);
+      }
+
+
 }

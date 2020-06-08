@@ -1,0 +1,9 @@
+<h3>{{data.winner}} wins</h3>
+<p *ngIf="data.hint != null"> {{data.hint}}</p>
+<p>Fascists are:</p>
+<ul>
+  <li *ngFor="let fascist of data.fascists">
+    {{fascist.name}} is {{fascist.secretRole == 1 ? 'Fascist':'Hitler'}}
+  </li>
+</ul>
+<button mat-button (click)="onNoClick()">Exit</button>

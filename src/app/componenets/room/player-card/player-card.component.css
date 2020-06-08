@@ -12,3 +12,12 @@
   height: 50px;
   border-radius: 50%;
 }
+.president{
+  border-color: #4CAF50;
+}
+.dead{
+  border-color: red;
+}
+.none{
+
+}

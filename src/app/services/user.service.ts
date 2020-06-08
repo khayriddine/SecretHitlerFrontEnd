@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@aspnet/signalr';
 
 
 import { environment as env } from 'src/environments/environment';
@@ -13,23 +13,56 @@ import { Room } from '../models/Room';
   providedIn: 'root'
 })
 export class UserService {
+
+
+
+
   private user : Subject<User> = new Subject<User>();
   public user$ = this.user.asObservable();
   private notif = new Subject<string>();
   public notif$ = this.notif.asObservable();
   roomNavigation : EventEmitter<Room>;
+  private rooms : Subject<Room[]> = new Subject<Room[]>();
+  public rooms$ = this.rooms.asObservable();
+  private room : Subject<Room> = new Subject<Room>();
+  public room$ = this.room.asObservable();
+    private goRoom : Subject<Room> = new Subject<Room>();
+  public goRoom$ = this.goRoom.asObservable();
   private hubConnection : HubConnection;
   constructor(private http: HttpClient) {
     this.roomNavigation = new EventEmitter<Room>();
+
+
+
+
+
+   }
+   public async startConnection(id:number = null){
     this.hubConnection =  new HubConnectionBuilder().withUrl(env.hubUrl+'hubUsers')
     .build();
-    this.hubConnection.start();
-    this.onNavigationToRoom();
-
-
+    await this.hubConnection.start();
+    this.hubConnection.on('NavigationToRoom',(room:Room) => {
+      this.goRoom.next(room);
+    });
     this.hubConnection.on('Notify',(type:string) => {
       this.notif.next(type);
     });
+    this.hubConnection.on('GetRooms',(rs:Room[]) => {
+      this.rooms.next(rs);
+    });
+    this.hubConnection.on('UpdateRoom',(r:Room) => {
+      this.room.next(r);
+    });
+    if(id != null){
+      this.newUser(id);
+    }
+   }
+   newUser(id: number){
+     this.hubConnection.invoke('NewUser',id).catch(err => {
+      console.log('Error while establishing connection... Retrying...');
+      setTimeout(() => {
+      }, 3000);
+  });
    }
   updateUser(userId: number, user: User) {
     return this.http.put<User>(env.apiUrl+'api/users/'+userId,user);
@@ -79,12 +112,32 @@ export class UserService {
     this.hubConnection.invoke("Notify",type);
   }
   navigateToRoom(room : Room){
-    console.log(room);
     this.hubConnection.invoke('NavigaToRoom',room);
   }
-  onNavigationToRoom(){
-    this.hubConnection.on('NavigationToRoom',(room : Room) => {
-      this.roomNavigation.emit(room);
-    })
+
+  createRoom(room: Room) {
+    this.hubConnection.invoke('CreateRoom',room);
   }
+  removeRoom(roomId: number) {
+    this.hubConnection.invoke('RemoveRoom',roomId);
+  }
+  leaveRoom(user: User, roomId: number) {
+    user.roomId = null;
+    this.updateUser(user.userId,user).subscribe(res => {
+      this.hubConnection.invoke('LeaveRoom',user.userId,roomId);
+    })
+
+  }
+  joinRoom(user: User) {
+    this.updateUser(user.userId,user).subscribe(res => {
+      this.hubConnection.invoke('JoinRoom',user,user.roomId);
+    })
+
+  }
+  getRooms() {
+    if(this.hubConnection.state == HubConnectionState.Connected){
+      this.hubConnection.invoke('RequestRooms');
+    }
+  }
+
 }
